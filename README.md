@@ -1,8 +1,6 @@
 # R
-Recuerde este repositorio de scripts son los super poderes en R del laboratorio de Microbiologia Marina UC
-Todos los scripts deben incluir en la primera linea el nombre del script describiendo para que es
-y el nombre del laboratorio.
-Incluya al comienzo tambien su nombre para saber quien hizo el script inicialmente
+Este es un repositorio de todos los superpoderes en R del Lab de Microbiología Marina UC
+Si usted va a agregar un script pongale un nombre y no olvide agregar el nombre del laboratorio y el suyo
 
 Sea claro con sus comentarios o muera
 
