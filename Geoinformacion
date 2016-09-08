@@ -1,0 +1,74 @@
+####################Analisis de Geoinformacion################################
+####################Laboratorio de Microbiologia Marina UC####################
+library(maps)
+library(mapdata)
+library(maptools)
+library(ggplot2)
+library(ggmap)
+library(ggsn)
+library(gridExtra)
+library(geosphere)
+library(raster)
+library(lattice)
+library(rgdal)
+####################GGMAP#####################################################
+####################GGMAP#####################################################
+#Coordenadas
+lon <- c(-70.65,-70.7)
+lat <- c(-26.33,-26.565)
+df <- as.data.frame(cbind(lon,lat))
+#Obtener la imagen, indicar el centro del mapa con lon y lat
+pngMAP_df <-  get_map(location = c(lon = -70.70, lat = -26.45),
+                      source = "google",
+                      zoom = 11,
+                      color = "color",
+                      maptype ="terrain")
+
+#Data para poner una escala de tama;o relativa a la escala del mapa
+#EN PROCESO!
+bb <- attr(pngMAP_df,"bb")
+ptspermm <- 2.83464567
+
+sbar <- data.frame(lon.start = c(bb$ll.lon + 0.1*(bb$ur.lon - bb$ll.lon)),
+                   lon.end = c(bb$ll.lon + 0.25*(bb$ur.lon - bb$ll.lon)),
+                   lat.start = c(bb$ll.lat + 0.1*(bb$ur.lat - bb$ll.lat)),
+                   lat.end = c(bb$ll.lat + 0.1*(bb$ur.lat - bb$ll.lat)))
+
+sbar$distance <- geosphere::distVincentyEllipsoid(c(sbar$lon.start,sbar$lat.start),
+                                                  c(sbar$lon.end,sbar$lat.end))
+scalebar.length <- 10
+sbar$lon.end <- (sbar$lon.start + (sbar$lon.end-sbar$lon.start)*(scalebar.length*1000)/sbar$distance)
+
+p1 <-  ggmap(pngMAP_df) + 
+    geom_point(data = df, aes(x = lon, y = lat), fill = "red", alpha = 0.8, size = 4, shape = 21) +
+    geom_text(data = df, aes(x = lon, y = lat+0.02), label="Sample Site", size= 6) +
+    xlab(expression(Longitude * ' ' * degree * E * ' ')) +
+    ylab(expression(Latitude * ' ' * degree * S * ' '))  +
+#    geom_segment(data = sbar, aes(x = lon.start, xend = lon.end, y = lat.start, yend = lat.end)) +
+#    geom_text(data = sbar, aes(x = (lon.start + lon.end)/2, y = lat.start + 0.025*(bb$ur.lat - bb$ll.lat), label = paste('10.000', 'm')), hjust = 0.5, vjust = 0, size = 8/ptspermm) +
+#   StatDensity2d(aes(x = lon, y = lat, fill = ..level.., alpha = ..level..), size = 2, bins = 4, data = violent_crimes, geom = "polygon")
+    theme_bw()
+    
+###############MARMAP-NOAA#####################################
+###############MARMAP-NOAA#####################################
+library(marmap)
+library(map)
+library(maptools)
+                                                        #Libreria marmap no es compatible con getmap
+                                                        #crear colores
+blues <- colorRampPalette(c("darkblue", "cyan"))
+greys <- colorRampPalette(c(grey(0.4),grey(0.99)))
+                                                        #obtener imagen, determinar las dimensiones de la imagen en rangos
+atl<- getNOAA.bathy(-78,-62,-60,-18,resolution=10)      #especificar rangos de Lat y lon
+plot.bathy(atl, image = TRUE, land = TRUE, n=1,         #El "n" representa la intensidad de las marcas de altitud
+           bpal = list(c(0, max(atl), greys(100)),
+                       c(min(atl), 0, blues(100))))     #numero de particiones para las paletas de colores
+map.scale(relwidth= 0.1, metric= T, ratio= T)           #agregar la escala
+
+wireframe(unclass(atl), drape = TRUE,#plot en 3D
+          aspect = c(1, 0.1),
+          scales = list(draw=F,arrows=F),
+          xlab="",ylab="",zlab="",
+          at=c(min(atl)/100*(99:0),max(atl)/100*(1:99)),
+          col.regions = c(blues(100),greys(100)),
+          col='transparent')
