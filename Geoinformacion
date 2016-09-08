@@ -1,5 +1,6 @@
 ####################Analisis de Geoinformacion################################
-####################Laboratorio de Microbiologia Marina UC####################
+##################Laboratorio de Microbiologia Marina UC######################
+###############Obtener mapas y poner puntos georeferenciados####BG############
 library(maps)
 library(mapdata)
 library(maptools)
