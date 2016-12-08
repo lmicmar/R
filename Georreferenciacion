@@ -1,6 +1,8 @@
-####################Analisis de Geoinformacion################################
-##################Laboratorio de Microbiologia Marina UC######################
-###############Obtener mapas y poner puntos georeferenciados####BG############
+####################  Analisis de Geoinformacion  ################################
+##################  Laboratorio de Microbiologia Marina UC  ######################
+###############  Obtener mapas y poner puntos georeferenciados ###################
+##################################################################### BG2016 #####
+
 library(maps)
 library(mapdata)
 library(maptools)
@@ -12,8 +14,9 @@ library(geosphere)
 library(raster)
 library(lattice)
 library(rgdal)
-####################GGMAP#####################################################
-####################GGMAP#####################################################
+
+#################### GGMAP #####################################################
+
 #Coordenadas
 lon <- c(-70.65,-70.7)
 lat <- c(-26.33,-26.565)
@@ -50,8 +53,8 @@ p1 <-  ggmap(pngMAP_df) +
 #   StatDensity2d(aes(x = lon, y = lat, fill = ..level.., alpha = ..level..), size = 2, bins = 4, data = violent_crimes, geom = "polygon")
     theme_bw()
     
-###############MARMAP-NOAA#####################################
-###############MARMAP-NOAA#####################################
+############### MARMAP-NOAA #####################################
+
 library(marmap)
 library(map)
 library(maptools)
