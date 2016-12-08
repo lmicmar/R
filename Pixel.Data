@@ -1,0 +1,109 @@
+#######################################################################################################
+###########################   Analizar datos de pixeles desde imagenes satelitales   ##################
+###########################         Laboratorio de Microbiologia Marina UC           ##################
+###########################################################################################  BG2016  ##
+
+library("gtools") # necesario para poder ordenar los archivos correctamente en orden temporal
+
+# obtener una lista de todos las tablas de datos para cargar en R
+filenames <- list.files("C:/Users/Benjamín Glasner/Documents/SeaDAS/Bahias_Norte_data_text/", pattern= "*.txt", full.names= TRUE)
+filenames <- mixedsort(filenames) #Ordenar archivos segun tiempo si el formato de nombres es yyyy_m.txt
+# Cargar todos los datos en una lista
+List.Tables <- lapply(filenames, read.table, header= T) # tener siempre cuidado que los rotulos queden como nombre y no como objeto
+
+#funcion para extraer columnas de tablas contenidas en listas
+Ext.Data <- function(x, y) { #argumentos: x es la lista de archivos ; y numero columna que se desea extraer
+    a <- NULL 
+    n <- 1:length(x)
+      for (i in n) {
+    a <- cbind(a, x[[i]][,y])
+      }
+    print(a)
+} 
+
+# Obtener las tablas para trabajar y transponerlas para q cada columna sea un pixel y cada fila un mes; numero corresponde al numero de columna deseada
+Chla <- data.frame(t(Ext.Data(List.Tables, "chlor_a_R_R")))     ###
+PAR  <- data.frame(t(Ext.Data(List.Tables, "par_D_R")))         ##### Tener cuidado con el nombre de las columnas, en casi todos los datos son la 5, 6, 8 pero puede variar
+SST  <- data.frame(t(Ext.Data(List.Tables, "sst_D")))           ###
+
+# Poner los nombres de las columnas 
+meses <- c(1:dim(Chla)[1]) #determina todos los datos mensuales q se dispone
+years <- rep(c(2010:2016), each=12) #Especificar los años para hacer los labels
+month.list <- rep(month.abb, 10)
+rownames(Chla) <- paste(month.list[1:dim(Chla)[1]], years[1:dim(Chla)[1]])
+rownames(PAR)  <- paste(month.list[1:dim(PAR)[1]], years[1:dim(PAR)[1]])
+rownames(SST)  <- paste(month.list[1:dim(SST)[1]], years[1:dim(SST)[1]])
+
+#Algunos vectores necesarios mas adelante
+epsilon <- 0.02 #ancho de barra horizontal de barras de error en plots
+No.NA.Data.Chla <- rowSums(!is.na(Chla)) ##
+No.NA.Data.PAR  <- rowSums(!is.na(PAR))  #### Valores necesarios para calcular el error standard
+No.NA.Data.SST  <- rowSums(!is.na(SST))  ##
+
+#Calcular promedio y sd mensual
+Mean.Chla <- apply(Chla, 1, function(x) mean(na.omit(x)))
+Mean.PAR  <- apply(PAR, 1, function(x) mean(na.omit(x)))
+Mean.SST  <- apply(SST, 1, function(x) mean(na.omit(x)))
+Sd.Chla <- apply(Chla, 1, function(x) sd(na.omit(x)))
+Sd.PAR  <- apply(PAR, 1, function(x) sd(na.omit(x)))
+Sd.SST  <- apply(SST, 1, function(x) sd(na.omit(x)))
+
+#Construir tablas con valores promedio y su desviacion
+Mean.Table <- cbind(Mean.Chla, Mean.PAR, Mean.SST)
+Sd.Table   <- cbind(Sd.Chla, Sd.PAR, Sd.SST)
+
+########################################## Plots #####################################################
+
+par(oma= c(1,1,1,1), mar= c(4,5.2,3,5.2), mfrow= c(2,2)) #bottom, left, top and right #row vs col
+matplot(Chla, xaxt= "n", type= c("b"), pch= 1, col= 1:247, cex.lab= 0.95, xlab= "Date", ylab= "Chl-a (g/m^3)", ylim= c((min(Chla, na.rm = T) - 0.2), (max(Chla, na.rm = T) + 0.2)), main= "Chlorophyl per pixel")
+axis(1, 1:dim(Chla)[1], labels= paste(month.list[1:dim(Chla)[1]], years[1:dim(Chla)[1]]))
+matplot(PAR, xaxt= "n", type= c("b"), pch= 1, col= 1:247, cex.lab= 0.95, xlab= "Date", ylab= "Photosynthetic Active radiation Einstein m^-2 d^-1", ylim= c((min(PAR, na.rm = T) - 0.2), (max(PAR, na.rm = T) + 0.5)), main= "PAR per pixel")
+axis(1, 1:dim(PAR)[1], labels= paste(month.list[1:dim(PAR)[1]], years[1:dim(PAR)[1]]))
+matplot(SST, xaxt= "n", type= c("b"), pch= 1, col= 1:247, cex.lab= 0.95, xlab= "Date", ylab= "Superficial Sea Temperature °C", ylim= c((min(SST, na.rm = T) - 0.2), (max(SST, na.rm = T) + 0.5)), main= "SST per pixel")
+axis(1, 1:dim(SST)[1], labels= paste(month.list[1:dim(SST)[1]], years[1:dim(SST)[1]]))
+
+####################################### Plot compuesto #################################################
+
+matplot(Mean.Table[,1], axes= F, lwd= 2, type= c("b"), pch= 1, col= 3, xlab= "", ylab= "", main= "Mean per Month")
+for(i in meses) {
+  for (j in No.NA.Data.Chla) {
+      up = Mean.Table[i,1] + (Sd.Table[i,1]/j)
+      low = Mean.Table[i,1] - (Sd.Table[i,1]/j)
+      segments(meses[i], low, meses[i], up)
+      segments(meses[i]-epsilon, up , meses[i]+epsilon, up)
+      segments(meses[i]-epsilon, low , meses[i]+epsilon, low)
+  }
+}
+axis(2, ylim= c((min(Mean.Chla, na.rm = T) - 0.2), (max(Mean.Chla, na.rm = T) + 0.2)), lwd= 2, col= 3)
+mtext(2, cex= 0.75, text= "Chl-a (g/m^3)", line= 2)
+
+par(new= T)
+matplot(Mean.Table[,2], axes= F,type= c("b"), pch= 1, col= 10, xlab= "", ylab= "", main= "")
+for(i in meses) {
+  for (j in No.NA.Data.PAR) {
+    up = Mean.Table[i,2] + (Sd.Table[i,2]/j)
+    low = Mean.Table[i,2] - (Sd.Table[i,2]/j)
+    segments(meses[i], low, meses[i], up)
+    segments(meses[i]-epsilon, up , meses[i]+epsilon, up)
+    segments(meses[i]-epsilon, low , meses[i]+epsilon, low)
+  }
+}
+axis(2, ylim= c((min(Mean.PAR, na.rm = T) - 0.2), (max(Mean.PAR, na.rm = T) + 0.2)), lwd= 2, line= 3.5, col= 10)
+mtext(2, cex= 0.75, text= "Photosynthetic Active radiation Einstein m^-2 d^-1", line= 5.5)
+
+par(new= T)
+matplot(Mean.Table[,3], axes= F,type= c("b"), pch= 1, col= 12, xlab= "", ylab= "", main= "")
+for(i in meses) {
+  for (j in No.NA.Data.SST) {
+    up = Mean.Table[i,3] + (Sd.Table[i,3]/j)
+    low = Mean.Table[i,3] - (Sd.Table[i,3]/j)
+    segments(meses[i], low, meses[i], up)
+    segments(meses[i]-epsilon, up , meses[i]+epsilon, up)
+    segments(meses[i]-epsilon, low , meses[i]+epsilon, low)
+  }
+}
+axis(2, ylim= c((min(Mean.SST, na.rm = T) - 0.2), (max(Mean.SST, na.rm = T) + 0.2)), lwd= 2, line= 7, col= 12)
+mtext(2, cex= 0.75, text= "Superficial Sea Temperature °C", line= 9)
+
+axis(1, 1:dim(Chla)[1], labels= paste(month.list[1:dim(Chla)[1]], years[1:dim(Chla)[1]]))
+mtext("Date", cex= 0.75, side= 1, col= "Black", line= 2)
