@@ -1,0 +1,50 @@
+############ GRÁFICOS DE CORRELACIONES ############
+# Script recopilado por CMAB
+## Los scritps fueron obtenidos de la página: http://stackoverflow.com/questions/10680658/how-can-i-create-a-correlation-matrix-in-r y http://www.statmethods.net/input/exportingdata.html (Enero 2017). Se hicieron pequeñas modificaciones. 
+
+
+# 0. DATOS
+# Se debe construir una tabla en excel donde la primera columna sean los puntos de muestreo o las muestas a analizar y las columnas siguientes son las variables fisicoquímicas que se quieren correlacionar. 
+
+
+#1. Primero se debe crear el data.frame con la tabla que vamos a analizar. Recuerden que debe ser una archivo de excel que se guarde con el formato ".csv" 
+# En este ejemplo se usará el data.frame: "Tabla.cvs"
+
+
+# 2. Generamos la correlación de Spearman o Pearson. 
+# Spearman
+cor(Tabla, use="complete.obs", method="spearman")
+Tabla$Estacion <- NULL # Borra la primera columna de la correlación 
+
+# Pearson
+cor(Tabla, use="complete.obs", method="pearson")
+Tabla$Estacion <- NULL # Borra la primera columna de la correlación 
+
+
+# 3. Graficamos: Tenemos 2 opciones: A o B. 
+
+# A. Cuadros Lindos e interactivos :) 
+install.packages("qtlcharts")
+library("qtlcharts")
+data(Tabla)
+Tabla$Estacion <- NULL # Borra la primera columna de la correlación 
+iplotCorr(Tabla, reorder=TRUE, scatterplots =TRUE) # Grafica (Verificar que es interactivo)
+
+# B. Cuadrados Lindos :)
+# Realizar la correlación que les interesa
+M <- cor(Tabla, use="complete.obs", method="spearman") # Correlación Spearman 
+M <- cor(Tabla, use="complete.obs", method="pearson") # Correlación Pearson
+install.packages("corrplot")
+library("corrplot") 
+corrplot(M, method = "square", tl.col="black", addgrid.col="gray") # Graficar
+
+
+# 4. Crear una tabla en excel con las correlaciones de Pearson o Spearman
+install.packages("xlsx")
+library(xlsx)
+getwd()
+# Resultado en mi computador: "/Users/claraarboledab"
+write.xlsx(M, "/Users/claraarboledab/M.xlsx") # La tabla creada aparecerá en la dirección y el nombre que se le asigne. 
+
+# FIN  :) 
+
