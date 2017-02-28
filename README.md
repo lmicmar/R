@@ -8,7 +8,7 @@ Saludos lmicmar <3
 
 PD: lmicmar le facilita la pega, aqui tiene un molde.
 
-
+{
 #####################################################################################################
 ############################                Titulo del script             ###########################
 ############################    Laboratorio de Microbiologia Marina UC    ###########################
@@ -30,3 +30,4 @@ PD: lmicmar le facilita la pega, aqui tiene un molde.
 #tiempo precisamente en eso!
 
 #Saludos
+}
