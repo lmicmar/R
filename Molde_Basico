@@ -5,17 +5,29 @@
 
 Librerías necesarias para correr el script
 
-#####################################################################################################?
+#####################################################################################################
 
 
-#código.
+###  Analisis 1  ###
 
-recuerde agregar comentarios en las líneas donde ocupe funciones
-si ocupa algún parámetro poco intuitivo como 'cex', 'lty', 'lwk', u otra sigla inentendible
-también si ocupa algún parámetro propio de una función particular en un
-paquete particular, agregue comentarios
+Codigo
 
-si es fácil buscar en google, pero recuerde la idea de esto es evitar perder el 
-tiempo precisamente en eso!
+###  Analisis 2  ###
 
-Saludos
+Codigo
+
+###  Analisis 3  ###
+
+Codigo
+
+#Fin
+
+#recuerde agregar comentarios en las líneas donde ocupe funciones
+#si ocupa algún parámetro poco intuitivo como 'cex', 'lty', 'lwk', u otra sigla inentendible
+#también si ocupa algún parámetro propio de una función particular en un
+#paquete particular, agregue comentarios
+
+#Si, es fácil buscar en google, pero recuerde la idea de esto es evitar perder el 
+#tiempo precisamente en eso!
+
+#Saludos lmicmar <3
