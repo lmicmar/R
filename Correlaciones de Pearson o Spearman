@@ -4,7 +4,7 @@
 
 
 # 0. DATOS
-# Se debe construir una tabla en excel donde la primera columna sean los puntos de muestreo o las muestas a analizar y las columnas siguientes son las variables fisicoquímicas que se quieren correlacionar. 
+# Se debe construir una tabla en excel donde la primera columna serán los puntos de muestreo o las muestas a analizar y las columnas siguientes serán las variables fisicoquímicas que se quieren correlacionar. 
 
 
 #1. Primero se debe crear el data.frame con la tabla que vamos a analizar. Recuerden que debe ser una archivo de excel que se guarde con el formato ".csv" 
