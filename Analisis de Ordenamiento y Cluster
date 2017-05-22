@@ -1,10 +1,9 @@
 #####################################################################################################
-############################      Analisis de Ordenamiento y Cluster      ###########################
+############################            Analisis de Ordenamiento          ###########################
 ############################    Laboratorio de Microbiologia Marina UC    ###########################
 ######################################################################################### BG2017 ####
 library('vegan')
 library('ape')
-library('clustsig')
 library('ggbiplot')
 library('ggplot2')
 
@@ -30,22 +29,3 @@ g1 <- g1 + scale_color_brewer(palette = 'Paired') #color_brewer trae diferentes 
 g1 <- g1 + theme_bw()
 g1$layers <- c(g1$layers, g1$layers[[1]]) #superponer esta capa para que queden las eigen vectos delante de los ptos
 g1
-
-########################### analisis de Cluster ##############################
-
-Dist.Data <- vegdist(a, method = "bray") #"manhattan", "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao"
-Clust.Data <- hclust(Dist.Data, method = "single") #"ward", "single", "complete", "average", "mcquitty", "median" or "centroid"
-plot(as.phylo(Clust.Data), cex = 0.7, label.offset = 0.005, type='phylogram', x.lim = 0.06) #"phylogram", "cladogram", "unrooted", "fan", "radial", 
-axis(side = 1, line = 1)
-
-Simprof.data <- simprof(a, num.expected=501, num.simulated=500,
-                method.cluster="single", #"ward", "single", "complete", "average", "mcquitty", "median" or "centroid"
-                method.distance="braycurtis", #"euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski", "braycurtis" or "czekanowski"
-                method.transform="identity", #"identity" (no transformation), "squareroot", "log", "PA" (Presence/Absence), or any numeric value
-                alpha=0.05, sample.orientation="row", const=0,
-                silent=TRUE, increment=100,
-                undef.zero=TRUE, warn.braycurtis=TRUE)
-
-simprof.plot(Simprof.data, leafcolors=NA, plot=TRUE, fill=TRUE,
-             leaflab="perpendicular", #"perpendicular" (vertical), "textlike" (horizontal), or "none"
-             siglinetype="different") #0=blank, 1=solid (default), 2=dashed, 3=dotted, 4=dotdash, 5=longdash, 6=twodash, and "different"
