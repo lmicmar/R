@@ -1,0 +1,29 @@
+##########################################################################################################################
+##########################################          Cluster Analysis            ##########################################
+############################################################################################################### BG2017 ###
+
+Library('png')
+library('clustsig')
+
+##########################################################################################################################
+#Simple clustering. Useful for visualization only
+Dist.Data <- vegdist(y, method = "bray")                                      #"manhattan", "euclidean", "canberra", "bray", "kulczynski", "jaccard", "gower", "altGower", "morisita", "horn", "mountford", "raup" , "binomial" or "chao"
+Clust.Data <- hclust(Dist.Data, method = "single")                            #"ward", "single", "complete", "average", "mcquitty", "median" or "centroid"
+plot(as.phylo(Clust.Data), cex = 0.7, label.offset = 0.005, type='phylogram') #"phylogram", "cladogram", "unrooted", "fan", "radial", 
+axis(side = 1, line = 1)
+
+#SIMPROF test for statistical significance per branch in a pre-clustered sample.
+#Useful for Data Analysis
+Simprof.data <- simprof(z, num.expected=9, num.simulated=1000,                #Arguments: 'num.expected' means the maximun number of expected groups in you sample. 'num.simulated' means the number of iterations to perform (start with 10, and analyze with 1000; be careful)
+                        method.cluster="complete",                            #"ward", "single", "complete", "average", "mcquitty", "median" or "centroid"
+                        method.distance="actual-braycurtis",                  #"euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski", "braycurtis" or "czekanowski"
+                        method.transform="identity",                          #"identity" (no transformation), "squareroot", "log", "PA" (Presence/Absence), or any numeric value
+                        alpha=0.05, sample.orientation="row", const=0,
+                        silent=TRUE, increment=100,
+                        undef.zero=TRUE, warn.braycurtis=TRUE)
+png("Plot_Dendro.png", width = 6, height = 4, units = 'in', res = 350)       #it open a .png device, remember specify dimensions and resolution. File will be created in wd with specified name
+par(mar=c(8,3,1,1), lwd=2)
+simprof.plot(Simprof.data, leafcolors=NA, plot=TRUE, fill=T,
+             leaflab="perpendicular",                                        #"perpendicular" (vertical), "textlike" (horizontal), or "none"
+             siglinetype="solid")                                            #0=blank, 1=solid (default), 2=dashed, 3=dotted, 4=dotdash, 5=longdash, 6=twodash, and "different"
+dev.off()                                                                    #Closing  .png device This will generate the file in youru wd
