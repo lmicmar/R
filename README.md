@@ -7,4 +7,5 @@ Sea claro con sus comentarios o muera
 Saludos lmicmar <3
 
 PD1: lmicmar le facilita la vida, revise 'Molde_Basico'
+
 PD2: lmicmar le facilita la vida nuevamente, revise 'Formato'
