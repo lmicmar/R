@@ -1,0 +1,32 @@
+#####################################################################################################
+############################            Modificaciones Utiles             ###########################
+############################    Laboratorio de Microbiologia Marina UC    ###########################
+######   3.2.1   #######################################################################   BG2017  ##
+
+# No requiere librerias, solo el base de R
+
+#####################################################################################################
+
+#Funcion para relativizar los reads de una tabla de OTU's por muestra.
+z <- NULL
+for (i in 1:dim(OTU.Table)[1]) {
+  z <- rbind(z, OTU.Table[i,]/apply(OTU.Table, 1, function(x) sum(x))[i])  #Al usar rbind los nombres de las filas se van a eliminar
+}                                                                          #Esto se puede corregir con:rownames(z) <- rownames(OTU.Table)                                     
+
+#Funcion para asignar taxonomia a una OTU.Table y juntar los reads de taxas iguales 
+Tax.sum <- function(OTU.Table, Tax.Table, Tax.lvl ){
+  z <- NULL
+  y <- NULL
+  for (i in 1:length(unique(Tax.Table[colnames(OTU.Table),Tax.lvl]))) {    #El ciclo suma las columnas con igual asignacion y conserva las columnas con asignacion unica 
+    if (length(OTU.Table[,which(Tax.Table[colnames(OTU.Table),Tax.lvl]==unique(Tax.Table[colnames(OTU.Table),Tax.lvl])[i])])!=length(rownames(OTU.Table))) {
+      z <- which(Tax.Table[colnames(OTU.Table),Tax.lvl]==unique(Tax.Table[colnames(OTU.Table),Tax.lvl])[i])
+      y <- cbind(y, apply(OTU.Table[,which(Tax.Table[colnames(OTU.Table),Tax.lvl]==unique(Tax.Table[colnames(OTU.Table),Tax.lvl])[i])], 1, function(x) sum(x)))
+    } else { 
+      y <- cbind(y, OTU.Table[,which(Tax.Table[colnames(OTU.Table),Tax.lvl]==unique(Tax.Table[colnames(OTU.Table),Tax.lvl])[i])])
+    }
+  }
+  colnames(y) <- unique(Tax.Table[colnames(OTU.Table),Tax.lvl])            #Coloca losnombres de las columnas en la nueva OTU.Table 
+  invisible((y))
+}
+
+#Fin
