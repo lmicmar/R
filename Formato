@@ -1,0 +1,18 @@
+###  OTU.Table  ###
+
+
+  OTU1  OTU2  ... OTUn
+S1
+.
+.
+.
+Sn
+
+###  Tax.Table  ### 
+
+OTU-ID  Level1  Level2  Level3  ... Level8
+OTU1
+.
+.
+.
+OTUn
