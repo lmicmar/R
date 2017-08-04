@@ -1,0 +1,43 @@
+#####################################################################################################
+############################              Diagramas de Venn               ###########################
+############################    Laboratorio de Microbiologia Marina UC    ###########################
+######   v3.2.1  #######################################################################   BG2017  ##
+
+library('VennDiagram')
+
+# Diagramas de venn de 2 a 4 grupos
+
+Venn.Diag <- function(l1) { #list with vectors to compare. Should be the names of elements
+  a1 <- length(l1)
+  if(is.list(l1) == FALSE){
+    print('imput should be a list')
+  }
+  if(a1 <= 1){
+    print('Not enough elements') #if the input does not have the right number of groups it will print a message
+  }else{
+    if(a1 == 2){ draw.pairwise.venn(area1 = length(l1[[1]]), area2 = length(l1[[2]]), cross.area = length(Reduce(intersect, l1)),
+                                  lty = rep("blank", 2), fill = c("light blue", "green"), category = names(l1), 
+                                  alpha = rep(0.5, 2), cat.pos = c(0, 0), euler.d = TRUE, sep.dist = c(0.5, 0.5), 
+                                  rotation.degree = 0)
+    }
+    if(a1 == 3){ draw.triple.venn(area1 = length(l1[[1]]), area2 = length(l1[[2]]), area3 = length(l1[[3]]), 
+                                n12 = length(Reduce(intersect, l1[c(1,2)])), n13 = length(Reduce(intersect, l1[c(1,3)])), 
+                                n23 = length(Reduce(intersect, l1[c(2,3)])), n123 = length(Reduce(intersect, l1[c(1,2,3)])), 
+                                lty = rep("blank", 3), fill = c("light blue", "green", "Red1"), category = names(l1), 
+                                alpha = rep(0.5, 3), cat.pos = rep(0, 3), euler.d = TRUE, sep.dist = rep(0.5, 3), 
+                                rotation.degree = 0)
+    }
+    if(a1 == 4){ draw.quad.venn(area1 = length(l1[[1]]), area2 = length(l1[[2]]), area3 = length(l1[[3]]), area4 = length(l1[[4]]), 
+                              n12 = length(intersect(l1[[1]], l1[[2]])), n13 = length(intersect(l1[[1]], l1[[3]])), n14 = length(intersect(l1[[1]], l1[[4]])),
+                              n23 = length(intersect(l1[[2]], l1[[3]])), n24 = length(intersect(l1[[2]], l1[[4]])), n34 = length(intersect(l1[[3]], l1[[4]])),
+                              n123 = length(intersect(intersect(l1[[1]], l1[[2]]), l1[[3]])), n124 = length(intersect(intersect(l1[[1]], l1[[2]]), l1[[4]])), n134 = length(intersect(intersect(l1[[1]], l1[[3]]), l1[[4]])),
+                              n234 = length(intersect(intersect(l1[[2]], l1[[3]]), l1[[4]])), n1234 = length(intersect(intersect(intersect(l1[[1]], l1[[2]]), l1[[3]]), l1[[4]])),
+                              lty = rep("blank", 4), fill = c("light blue", "green", "Red1", 'orange'), category = names(l1), 
+                              alpha = rep(0.5, 4), cat.pos = rep(0, 4), euler.d = TRUE, sep.dist = rep(0.5, 4), 
+                              rotation.degree = 0)
+    }
+    if(a1 > 4){ print('Too much elements')
+    }
+    print('So there you have')
+  }
+}
