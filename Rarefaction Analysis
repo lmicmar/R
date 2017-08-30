@@ -1,4 +1,12 @@
-############################   Rarefaction Analisis   ############################
+#####################################################################################################
+############################             Rarefaction Analisis             ###########################
+############################    Laboratorio de Microbiologia Marina UC    ###########################
+###### Versión R ####################################################################### Autor/año ##
+
+library('vegan')
+
+#####################################################################################################
+
 raremax <- sort(rowSums(a)) #Sumatoria de reads por muestra y ordenados de menor a mayor
 c <- Rarefy(a, raremax[3]) #el numero indica el mas malo, en este ejemplo el 3ro mas malo
 
