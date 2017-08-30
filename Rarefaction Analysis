@@ -1,0 +1,13 @@
+############################   Rarefaction Analisis   ############################
+raremax <- sort(rowSums(a)) #Sumatoria de reads por muestra y ordenados de menor a mayor
+c <- Rarefy(a, raremax[3]) #el numero indica el mas malo, en este ejemplo el 3ro mas malo
+
+tiff("Plot.tiff", width = 12, height = 6, units = 'in', res = 350)
+rarecurve(x = d1, col = colores(8), lwd = 2, las = 1, label = F, step = 10) #El aqui debe contener solo intergers
+qdev.off()
+#La funcion colores hay que crearla aparte con colorRampPalette() de library("RColorBrewer")
+
+#seleccionar en la tabla sola las otus con lecturas
+d <- c$otu.tab.rff[,which(apply(c$otu.tab.rff, 2, function(x) sum(x))!=0)] #otus despues de rarefaccionr
+d1 <- d[intersect(rownames(d), rownames(b)),]                              #muestras que coinsiden con al matiz ambiental
+d1 <- d1[,which(apply(d1, 2, function(x) sum(x))!=0)]                      #otus presentes solo en muestras coinsidentes
