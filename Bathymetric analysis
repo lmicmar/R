@@ -1,0 +1,29 @@
+############### MARMAP-NOAA ###############
+library(marmap)
+library(map)
+library(maptools)
+blues <- colorRampPalette(c("darkblue", "cyan"))
+greys <- colorRampPalette(c(grey(0.4),grey(0.99)))
+atl<- getNOAA.bathy(lon1 = -68, lon2 = -80, lat1 = -15, lat2 = -70, resolution = 1) #especificar rangos de Lat y lon resolution its in minimun minute scale
+png('map_bathy_2d.png', width = 10, height = 10, units = 'cm', res = 1000)
+plot.bathy(atl, image = TRUE, land = TRUE, n=1, #El "n" representa la intensidad de las marcas de altitud
+           bpal = list(c(0, max(atl), greys(100)),
+                       c(min(atl), 0, blues(100))))#numero de particiones para las paletas de colores
+dev.off()
+#map.scale(relwidth= 0.1, metric= T, ratio= T)#agregar la escala
+
+png('map_bathy_3d.png', width = 10, height = 10, units = 'cm', res = 1000)
+wireframe(unclass(atl), drape = TRUE, #plot en 3D no se puede dibujar con resolucion de 1min, solo a partir de 2min
+          aspect = c(1, 0.1),
+          scales = list(draw=F,arrows=F),
+          xlab="",ylab="",zlab="",
+          at=c(min(atl)/100*(99:0),max(atl)/100*(1:99)),
+          col.regions = c(blues(100),greys(100)),
+          col='transparent')
+dev.off()
+
+trsect <- get.transect(atl, -70.65, -26.19, -70.72, -26.19, distance = TRUE) #Chanaral
+
+png('map_trsect_Bathy.png', width = 15, height = 10, units = 'cm', res = 1000)
+plotProfile(trsect)
+dev.off()
