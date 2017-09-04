@@ -52,27 +52,4 @@ p1 <-  ggmap(pngMAP_df) +
 #    geom_text(data = sbar, aes(x = (lon.start + lon.end)/2, y = lat.start + 0.025*(bb$ur.lat - bb$ll.lat), label = paste('10.000', 'm')), hjust = 0.5, vjust = 0, size = 8/ptspermm) +
 #   StatDensity2d(aes(x = lon, y = lat, fill = ..level.., alpha = ..level..), size = 2, bins = 4, data = violent_crimes, geom = "polygon")
     theme_bw()
-    
-############### MARMAP-NOAA #####################################
-
-library(marmap)
-library(map)
-library(maptools)
-                                                        #Libreria marmap no es compatible con getmap
-                                                        #crear colores
-blues <- colorRampPalette(c("darkblue", "cyan"))
-greys <- colorRampPalette(c(grey(0.4),grey(0.99)))
-                                                        #obtener imagen, determinar las dimensiones de la imagen en rangos
-atl<- getNOAA.bathy(-78,-62,-60,-18,resolution=10)      #especificar rangos de Lat y lon
-plot.bathy(atl, image = TRUE, land = TRUE, n=1,         #El "n" representa la intensidad de las marcas de altitud
-           bpal = list(c(0, max(atl), greys(100)),
-                       c(min(atl), 0, blues(100))))     #numero de particiones para las paletas de colores
-map.scale(relwidth= 0.1, metric= T, ratio= T)           #agregar la escala
-
-wireframe(unclass(atl), drape = TRUE,#plot en 3D
-          aspect = c(1, 0.1),
-          scales = list(draw=F,arrows=F),
-          xlab="",ylab="",zlab="",
-          at=c(min(atl)/100*(99:0),max(atl)/100*(1:99)),
-          col.regions = c(blues(100),greys(100)),
-          col='transparent')
+  
