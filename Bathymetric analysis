@@ -1,6 +1,5 @@
 ############### MARMAP-NOAA ###############
 library(marmap)
-library(map)
 library(maptools)
 blues <- colorRampPalette(c("darkblue", "cyan"))
 greys <- colorRampPalette(c(grey(0.4),grey(0.99)))
