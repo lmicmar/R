@@ -7,15 +7,37 @@ library('ape')
 library('ggbiplot')
 library('ggplot2')
 
+#Tanto para RDA como para CCA pues correr el analisis sin la matriz ambiental.
 #RDA 
 myrda <- rda(a, a2, scale=T) #(biological matrix, environmental matrix)
 
 # Usar la funcion 'text' para manejar parametros graficos de mejor manera
-plot(myrda, scaling= 1, type = 'n')
-text(myrda, display='sites', col='darkorange3', scaling = 1, cex=0.5)
-text(myrda, display = 'species', col='green4', scaling = 1, cex=0.55)
-text(myrda, display = 'bp', col='Red1', scaling= 1, cex=0.9)
+plot(myrda, scaling= 3, type = 'n') #crear un plot vacio
+text(myrda, display='sites', col='darkorange3', scaling = 3, cex=0.5)
+text(myrda, display = 'species', col='green4', scaling = 3, cex=0.55)
+text(myrda, display = 'bp', col='Red1', scaling= 3, cex=0.9)
 
+#CCA
+mycca <- cca(a, a2, scale=T) #(biological matrix, environmental matrix)
+plot(mycca, display=c("both","sites","species","none"), type = 'n', ylim = c(-1.2,1.2), xlim = c(-0.5,0.5))#crear un plot vacio y modidicar los ejes x e y
+#text(mycca, display = 'species', col='Green4', scaling = 3, cex = 0.55) #agregar las OTUs con su nombre
+with(mycca, points(mycca, display = 'species', scaling = 3, 
+                   col = c('black'), cex = .8, pch = 16)) #ejm para agregar las otus como puntos
+with(mycca, points(mycca, display = 'sites', scaling = 3, 
+                   col = c('Blue'), 
+                   cex = 1.8, pch = c(17)) #ejm para agregar sitios como puntos
+
+
+#ejemplos de leyendas en formato: (x,y,nombres,colores,tamano texto, borde, tipo de punto, tamano, espacio horiz, espacio vertic)
+legend(-2.5,1, legend = c('HCS Summer', 'LCS Summer', 'HCS Winter', 'LCS Winter' ), 
+       col = c('Red', 'Red', 'Blue', 'Blue'),
+       pt.cex = 1.5, bty = 'n', pch = c(18, 17, 18, 17),
+       cex = 0.8, x.intersp = 0.8, y.intersp = 0.9)
+       
+legend(-2.5,.4, legend = c('Heterotroph', 'Autotroph'), 
+       col = c('Black', 'Green'),
+       pt.cex = 1.5, bty = 'n', pch = c(16, 16),
+       cex = 0.8, x.intersp = 0.8, y.intersp = 0.9)
 #PCA
 Table.PCA <- prcomp(a, center = T, scale. = T) #calcular los PC, normalmente de los parametros ambientales
 print(Table.PCA)
