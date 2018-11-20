@@ -8,10 +8,15 @@
 #####################################################################################################
 
 #Funcion para relativizar los reads de una tabla de OTU's por muestra.
-z <- NULL
-for (i in 1:dim(OTU.Table)[1]) {
-  z <- rbind(z, OTU.Table[i,]/apply(OTU.Table, 1, function(x) sum(x))[i])  #Al usar rbind los nombres de las filas se van a eliminar
-}                                                                          #Esto se puede corregir con:rownames(z) <- rownames(OTU.Table)                                     
+
+rltv.Otu.Table <- function(x){
+x.Data.rltv <- NULL
+for (i in 1:dim(x)[1]) {
+ x.Data.rltv <- rbind(x.Data.rltv, x[i,]/apply(x, 1, function(x) sum(x))[i])
+}
+rownames(x.Data.rltv) <- rownames(x)
+invisible(x.Data.rltv)
+}                                                                      
 
 #Funcion para asignar taxonomia a una OTU.Table y juntar los reads de taxas iguales 
 Tax.sum <- function(OTU.Table, Tax.Table, Tax.lvl ){
