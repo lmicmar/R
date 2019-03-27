@@ -1,4 +1,7 @@
-
+#####################################################################################################
+############################                Color Palette Gen             ###########################
+############################    Laboratorio de Microbiologia Marina UC    ###########################
+######## 3.4.2 ######################################################################### BG/2019 ####
 
 #Esta funcion genera barridos de colores principalmente para graficos de abundancia relativa
 #se debe proveer una paleta de colores (Col.Pal) equivalente al numero de categorias en el nivel taxonomico
@@ -31,7 +34,7 @@ Cat.Cols <- Col.Gen(Col.Pal = c('#186000', '#A51313', '#E06808', '#707500', '#58
                     Tax.Table = Tax.Table, #Taxonomia Asociada a la Otu Table
                     Lvl = 2, # Nivel mayor
                     Sub.Lvl = 4, #Nivel al que se quiere hacer el grafico
-                    Tendency = '#C4C4BD') #Color contra el cual se realiza el barrido
+                    Tendency = '#C4C4BD') #Color contra el cual se realiza el barrido, en este caso un tono de gris
 
 # Visualizacion del resultado #
 for (i in 1:length(Cat.Cols)) {
