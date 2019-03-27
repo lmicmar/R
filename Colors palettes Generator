@@ -1,0 +1,56 @@
+
+
+#Esta funcion genera barridos de colores principalmente para graficos de abundancia relativa
+#se debe proveer una paleta de colores (Col.Pal) equivalente al numero de categorias en el nivel taxonomico
+#mayor deseado (Lvl) y un color contra el cual realizar el 'barrido' (Tendency). La funcion generara
+#colores para cada categoria considerando el numero de opciones en el nivel taxonomico que se desea
+#hacer el plot (Sub.Lvl)
+
+Col.Gen <- function(Col.Pal, Otu.Table, Tax.Table, Lvl, Sub.Lvl, Tendency = '#FEFEDF') { 
+  library("RColorBrewer")
+  if (length(Col.Pal)<length(unique(Tax.Table[colnames(Otu.Table),Lvl]))) {
+    print('Not enough colors for all cateories')
+  } else {
+    tmp1 <- Col.Pal
+    cols <- NULL
+    Cat.Cols <- list()
+    for (i in 1:length(unique(Tax.Table[colnames(Otu.Table),Lvl]))) {
+      cols <- colorRampPalette(c(tmp1[i], Tendency), space = 'rgb', interpolate = 'spline')
+      Cat.Cols[[i]] <- data.frame(Color = cols(length(unique(subset(Tax.Table[colnames(Otu.Table),], Tax.Table[colnames(Otu.Table),Lvl] == unique(Tax.Table[colnames(Otu.Table), Lvl])[i])[,Sub.Lvl]))+1),
+                                  Names = c(unique(subset(Tax.Table[colnames(Otu.Table),], Tax.Table[colnames(Otu.Table), Lvl] == unique(Tax.Table[colnames(Otu.Table), Lvl])[i])[,Sub.Lvl]), NA), 
+                                  stringsAsFactors = F)
+    }
+    names(Cat.Cols) <- unique(Tax.Table[colnames(Otu.Table), Lvl])
+    return(Cat.Cols)
+  }
+}
+
+# Forma de USO #
+Cat.Cols <- Col.Gen(Col.Pal = c('#186000', '#A51313', '#E06808', '#707500', '#582B39', '#96711B', '#C45259', '#89726D', '#535635'), #Una paleta cualquiera
+                    Otu.Table = Otu.Table, #Otu table que contenga los datos
+                    Tax.Table = Tax.Table, #Taxonomia Asociada a la Otu Table
+                    Lvl = 2, # Nivel mayor
+                    Sub.Lvl = 4, #Nivel al que se quiere hacer el grafico
+                    Tendency = '#C4C4BD') #Color contra el cual se realiza el barrido
+
+# Visualizacion del resultado #
+for (i in 1:length(Cat.Cols)) {
+  plot(rep(i, dim(Cat.Cols[[i]])[1]), col = Cat.Cols[[i]][,1], pch = 16, cex=3, ylim = c(-2, length(Cat.Cols)+2), 
+       xlim = c(0,20)) #note que si ocupa Sub.Lvl > 4 es posible que se generen mas de 20 colores
+  par(new=T)
+}
+par(new=F)
+
+# Linearizar la informacion para poder usarla en la generacion del plot #
+tmp1 <- NULL
+for (i in 1:length(Cat.Cols)) {
+  tmp1 <- c(tmp1, Cat.Cols[[i]][1:(dim(Cat.Cols[[i]])[1]-1),2])
+}
+tmp2 <- NULL
+for (i in 1:length(Cat.Cols)) {
+  tmp2 <- c(tmp2, Cat.Cols[[i]][1:(dim(Cat.Cols[[i]])[1]-1),1])
+}
+
+# Ahora puede usar el objeto tmp1 para indexar en su tabla de otus una vez sume los reads con la funcion 'Tax.sum' 
+# y puede usar tmp2 en el argumento 'col' para asociar el color a cada categoria de forma correlativa al orden 
+# contenido en tmp1
