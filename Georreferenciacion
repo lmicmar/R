@@ -7,13 +7,19 @@ library(maps)
 library(mapdata)
 library(maptools)
 library(ggplot2)
-library(ggmap)
+library(ggmap) #actualaizz (intall.package(ggmap))
 library(ggsn)
 library(gridExtra)
 library(geosphere)
 library(raster)
 library(lattice)
 library(rgdal)
+
+##IMPORTANTE##
+#debe crear clave Google API (maldito google) y luego correr lo siguiente#
+
+register_google("escribir_su_clave_API_aqui")
+showing_key() # el resultado deberia ser TRUE
 
 #################### GGMAP #####################################################
 
