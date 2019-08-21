@@ -133,7 +133,7 @@ print(track)
 
 
 
-##look at rowSums, see if removing samples with few sequences makes sense 
+##look at rowSums, see if removing samples with few sequences makes sense (PENDING, to check the order of the samples in the graph.. not making a lot of sense right now: use the table to check final reads per sample)
 
 sample_sum_df<-data.frame(sum=rowSums(seqtab.nochim))
 ggplot(data=arrange(sample_sum_df,desc(sum)), aes(x=rownames(sample_sum_df), y=sum))+ggtitle("Sample sequencing depth")+
@@ -146,32 +146,35 @@ seqtab.nochim = seqtab.nochim[,colSums(seqtab.nochim) > 10]
 
 
 ##write sequence table to file
-```{r,message=FALSE, warning=FALSE, include=FALSE}
+
 write.csv2(seqtab.nochim, file = "C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/output/seqtab_nochim.csv")
-```
-##assign taxonomy (RDP, Greengenes, Silva)
-```{r, message=FALSE, warning=FALSE, include=FALSE}
+
+
+##assign taxonomy (RDP, Silva)
+
 taxa_silva <- assignTaxonomy(seqtab.nochim, "C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/DBs/silva_nr_v132_train_set.fa.gz")
 taxa_rdp<-assignTaxonomy(seqtab.nochim, "C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/DBs/rdp_train_set_16.fa.gz")
-```
+
+
 ##add species level (RDP,Silva)
-```{r}
+
 taxa_silva <- addSpecies(taxa_silva, "C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/DBs/silva_species_assignment_v132.fa.gz")
 taxa_rdp <- addSpecies(taxa_rdp,"C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/DBs/rdp_species_assignment_16.fa.gz")
-```
+
+
 ##Let’s inspect the taxonomic assignments
-```{r}
+
 taxa.print_silva <- taxa_silva # Removing sequence rownames for display only
 rownames(taxa.print_silva) <- NULL
 head(taxa.print_silva)
 taxa.print_rdp <- taxa_rdp # Removing sequence rownames for display only
 rownames(taxa.print_rdp) <- NULL
 head(taxa.print_rdp)
-```
+
+
 ##write taxonomy assignments to file
-```{r, message=FALSE, warning=FALSE, include=FALSE}
-#write.csv(taxa_gg, file = "~/Documents/AHRSuPC/output/taxa_gg.csv")
+
 write.csv2(taxa_silva, file = "C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/output/taxa_silva.csv")
 write.csv2(taxa_rdp, file = "C:/Users/Rodrigo/Dropbox/00_Estudiantes/LK/SeqComunidadesPaper470/output/taxa_rdp.csv")
-```
+
 
